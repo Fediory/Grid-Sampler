@@ -23,15 +23,18 @@ SERVER_ARGS="--env LIBERO" docker compose -f examples/libero/compose.yml up --bu
 MUJOCO_GL=glx SERVER_ARGS="--env LIBERO" docker compose -f examples/libero/compose.yml up --build
 ```
 
-You can customize the loaded checkpoint by providing additional `SERVER_ARGS` (see `scripts/serve_policy.py`), and the LIBERO task suite by providing additional `CLIENT_ARGS` (see `examples/libero/main.py`).
+You can customize the loaded checkpoint by providing additional `SERVER_ARGS` (see `scripts/serve_policy.py`), and the LIBERO client by providing additional `CLIENT_ARGS` (see `examples/libero/main.py`, `Args` dataclass). Run `python examples/libero/main.py --help` for all flags.
+
+Notable client options include `--filename` (path for evaluation logs written by `logging`; default `logs/grid.txt`; parent directories are created automatically), plus connection settings such as `--host` and `--port`.
+
 For example:
 
 ```bash
 # To load a custom checkpoint (located in the top-level openpi/ directory):
 export SERVER_ARGS="--env LIBERO policy:checkpoint --policy.config pi05_libero --policy.dir ./my_custom_checkpoint"
 
-# To run the libero_10 task suite:
-export CLIENT_ARGS="--args.task-suite-name libero_10"
+# Custom evaluation log file (combine with --host / --port as needed):
+export CLIENT_ARGS="--filename logs/my_libero_eval.txt"
 ```
 
 ## Without Docker (not recommended)
@@ -48,7 +51,7 @@ uv pip install -e third_party/libero
 export PYTHONPATH=$PYTHONPATH:$PWD/third_party/libero
 
 # Run the simulation
-python examples/libero/main.py
+python examples/libero/main.py --filename logs/my_run.txt
 
 # To run with glx for Mujoco instead (use this if you have egl errors):
 MUJOCO_GL=glx python examples/libero/main.py
@@ -63,9 +66,11 @@ uv run scripts/serve_policy.py --env LIBERO
 
 ## Results
 
-If you want to reproduce the following numbers, you can evaluate the checkpoint at `gs://openpi-assets/checkpoints/pi05_libero/`. This
-checkpoint was trained in openpi with the `pi05_libero` config.
-
 | Model | Libero Spatial | Libero Object | Libero Goal | Libero 10 | Average |
 |-------|---------------|---------------|-------------|-----------|---------|
-| π0.5 @ 30k (finetuned) | 98.8 | 98.2 | 98.0 | 92.4 | 96.85
+| π0.5 @ 30k (Official Finetuned) | 98.8 | 98.2 | 98.0 | 92.4 | 96.9
+| π0.5 @ 30k (Our Finetuned) | 98.4 | 98.0 | 97.6 | 92.8 | 96.7
+| π0.5 @ 30k (GridS16) | 98.6 | 98.8 | 98.4 | 95.2 | 97.7
+| π0 @ 30k (Our Finetuned) | 97.2 | 98.8 | 96.0 | 85.6 | 94.4
+| π0 @ 30k (GridS16) | 98.0 | 99.2 | 96.4 | 90.2 | 96.0
+

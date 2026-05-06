@@ -29,6 +29,15 @@ class Pi0Config(_model.BaseModelConfig):
     # - the state input is part of the discrete language tokens rather than a continuous input that is part of the suffix
     # - the action expert uses adaRMSNorm to inject the flow matching timestep
     pi05: bool = False
+    
+    # Grid-based active token sampling
+    grid: bool = False
+    num_token_samples: int = 16
+    embed_coords: bool = True
+    # Log predicted sampling coords (JIT-safe); see ActiveTokenSampler.log_pred_coords
+    log_active_token_coords: bool = False
+    active_token_coords_log_path: str = "active_token_pred_coords.log"
+    
     # This config option is not used directly by the model, but it is read by the ModelTransformFactory.
     discrete_state_input: bool = None  # type: ignore
 
@@ -42,6 +51,8 @@ class Pi0Config(_model.BaseModelConfig):
     @override
     def model_type(self) -> _model.ModelType:
         if self.pi05:
+            if self.grid:
+                return _model.ModelType.PI05_GRID
             return _model.ModelType.PI05
         return _model.ModelType.PI0
 

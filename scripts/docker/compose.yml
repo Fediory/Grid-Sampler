@@ -13,7 +13,7 @@ services:
     # Populate aws credential inside the container.
     volumes:
       - $PWD:/app
-      - ${OPENPI_DATA_HOME:-~/.cache/openpi}:/openpi_assets
+      - ${OPENPI_DATA_HOME:-/hdd/fediory/.cache/openpi}:/openpi_assets
     environment:
       - SERVER_ARGS
       - OPENPI_DATA_HOME=/openpi_assets

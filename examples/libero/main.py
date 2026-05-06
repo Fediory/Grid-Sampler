@@ -3,6 +3,7 @@ import dataclasses
 import logging
 import math
 import pathlib
+import time
 
 import imageio
 from libero.libero import benchmark
@@ -16,7 +17,7 @@ import tyro
 
 LIBERO_DUMMY_ACTION = [0.0] * 6 + [-1.0]
 LIBERO_ENV_RESOLUTION = 256  # resolution used to render training data
-
+METHOD = "grid" # options: baseline, lora, grid, grid+lora
 
 @dataclasses.dataclass
 class Args:
@@ -24,23 +25,22 @@ class Args:
     # Model server parameters
     #################################################################################################################
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = 8888
     resize_size: int = 224
-    replan_steps: int = 5
+    replan_steps: int = 10
 
     #################################################################################################################
     # LIBERO environment-specific parameters
     #################################################################################################################
-    task_suite_name: str = (
-        "libero_spatial"  # Task suite. Options: libero_spatial, libero_object, libero_goal, libero_10, libero_90
-    )
-    num_steps_wait: int = 10  # Number of steps to wait for objects to stabilize i n sim
+    task_suite_name: str = ''  # Task suite. Options: libero_spatial, libero_object, libero_goal, libero_10, libero_90
+    num_steps_wait: int = 10  # Number of steps to wait for objects to stabilize in sim
     num_trials_per_task: int = 50  # Number of rollouts per task
 
     #################################################################################################################
     # Utils
     #################################################################################################################
-    video_out_path: str = "data/libero/videos"  # Path to save videos
+    video_out_path: str = ''  # Path to save videos
+    filename: str = "examples/libero/logs/grid.txt"  # Log file path passed to logging.basicConfig
 
     seed: int = 7  # Random Seed (for reproducibility)
 
@@ -69,11 +69,13 @@ def eval_libero(args: Args) -> None:
         max_steps = 400  # longest training demo has 373 steps
     else:
         raise ValueError(f"Unknown task suite: {args.task_suite_name}")
-
+    
+    max_steps = 1500  # set a large max step for all suites
     client = _websocket_client_policy.WebsocketClientPolicy(args.host, args.port)
 
     # Start evaluation
-    total_episodes, total_successes = 0, 0
+    total_episodes, total_successes, total_num_steps = 0, 0, 0
+    total_infer_time, total_infer_steps = 0.0, 0
     for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
         # Get task
         task = task_suite.get_task(task_id)
@@ -85,7 +87,7 @@ def eval_libero(args: Args) -> None:
         env, task_description = _get_libero_env(task, LIBERO_ENV_RESOLUTION, args.seed)
 
         # Start episodes
-        task_episodes, task_successes = 0, 0
+        task_episodes, task_successes, task_num_steps = 0, 0, 0
         for episode_idx in tqdm.tqdm(range(args.num_trials_per_task)):
             logging.info(f"\nTask: {task_description}")
 
@@ -122,7 +124,8 @@ def eval_libero(args: Args) -> None:
                     )
 
                     # Save preprocessed image for replay video
-                    replay_images.append(img)
+                    # replay_images.append(img)
+                    replay_images.append(wrist_img)
 
                     if not action_plan:
                         # Finished executing previous action chunk -- compute new chunk
@@ -141,7 +144,11 @@ def eval_libero(args: Args) -> None:
                         }
 
                         # Query model to get action
+                        infer_start = time.perf_counter()
                         action_chunk = client.infer(element)["actions"]
+                        total_infer_time += time.perf_counter() - infer_start
+                        total_infer_steps += 1
+
                         assert (
                             len(action_chunk) >= args.replan_steps
                         ), f"We want to replan every {args.replan_steps} steps, but policy only predicts {len(action_chunk)} steps."
@@ -154,6 +161,9 @@ def eval_libero(args: Args) -> None:
                     if done:
                         task_successes += 1
                         total_successes += 1
+                        task_num_steps += t + 1
+                        total_num_steps += t + 1
+                        logging.info("Num steps taken: %d", t + 1)
                         break
                     t += 1
 
@@ -181,9 +191,12 @@ def eval_libero(args: Args) -> None:
         # Log final results
         logging.info(f"Current task success rate: {float(task_successes) / float(task_episodes)}")
         logging.info(f"Current total success rate: {float(total_successes) / float(total_episodes)}")
+        logging.info(f"Current task num steps: {float(task_num_steps) / float(task_successes + 1e-5)}")
 
     logging.info(f"Total success rate: {float(total_successes) / float(total_episodes)}")
+    logging.info(f"Total num steps: {float(total_num_steps) / float(total_successes + 1e-5)}")
     logging.info(f"Total episodes: {total_episodes}")
+    logging.info(f"Average inference time per step: {total_infer_time / total_infer_steps:.4f} seconds")
 
 
 def _get_libero_env(task, resolution, seed):
@@ -215,5 +228,21 @@ def _quat2axisangle(quat):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    tyro.cli(eval_libero)
+    base_args = tyro.cli(Args)
+    pathlib.Path(base_args.filename).parent.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        filename=base_args.filename,
+        filemode="w",
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
+    datasets = ["spatial", "object", "goal", "10"]
+    for dataset in datasets:
+        args = dataclasses.replace(
+            base_args,
+            task_suite_name=f"libero_{dataset}",
+            video_out_path=f"data/libero/{dataset}/{METHOD}",
+        )
+        logging.info(f"Starting evaluation for dataset: {dataset}")
+        eval_libero(args)
+        logging.info(f"Finished evaluation for dataset: {dataset}")

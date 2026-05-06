@@ -10,14 +10,37 @@ from openpi.policies import policy_config as _policy_config
 from openpi.serving import websocket_policy_server
 from openpi.training import config as _config
 
-
 class EnvMode(enum.Enum):
     """Supported environments."""
 
     ALOHA = "aloha"
     ALOHA_SIM = "aloha_sim"
     DROID = "droid"
-    LIBERO = "libero"
+    LIBERO_PI0 = "libero_pi0"
+    LIBERO_PI0_GRID = "libero_pi0_grid"
+    LIBERO_PI0_GRID8 = "libero_pi0_grid8"
+    LIBERO_PI0_GRID4 = "libero_pi0_grid4"
+    LIBERO_PI05 = "libero_pi05"
+    LIBERO_PI05_BASE = "libero_base"
+    # LIBERO_PI05_LORA = "libero_lora"
+    LIBERO_PI05_GRID32 = "libero_grid32"
+    LIBERO_PI05_GRID = "libero_grid"
+    LIBERO_PI05_GRID12 = "libero_grid12"
+    LIBERO_PI05_GRID10 = "libero_grid10"
+    LIBERO_PI05_GRID8 = "libero_grid8"
+    LIBERO_PI05_GRID6 = "libero_grid6"
+    LIBERO_PI05_GRID4 = "libero_grid4"
+    LIBERO_PI05_GRID1 = "libero_grid1"
+    # LIBERO_PI05_GRID_LORA = "libero_grid_lora"
+    
+    ALOHA_PI0_TRANSFER_CUBE_SCRIPT = "aloha_pi0_transfer_cube_script"
+    ALOHA_PI0_TRANSFER_CUBE_HUMAN = "aloha_pi0_transfer_cube_human"
+    ALOHA_PI0_INSERTION_SCRIPT = "aloha_pi0_insertion_script"
+    ALOHA_PI0_INSERTION_HUMAN = "aloha_pi0_insertion_human"
+    ALOHA_PI0_GRID_TRANSFER_CUBE_HUMAN  = "aloha_pi0_grid_transfer_cube_human"
+    ALOHA_PI0_GRID_TRANSFER_CUBE_SCRIPT = "aloha_pi0_grid_transfer_cube_script"
+    ALOHA_PI0_GRID_INSERTION_HUMAN = "aloha_pi0_grid_insertion_human"
+    ALOHA_PI0_GRID_INSERTION_SCRIPT = "aloha_pi0_grid_insertion_script"
 
 
 @dataclasses.dataclass
@@ -47,7 +70,7 @@ class Args:
     default_prompt: str | None = None
 
     # Port to serve the policy on.
-    port: int = 8000
+    port: int = 8888
     # Record the policy's behavior for debugging.
     record: bool = False
 
@@ -65,14 +88,106 @@ DEFAULT_CHECKPOINT: dict[EnvMode, Checkpoint] = {
         config="pi0_aloha_sim",
         dir="gs://openpi-assets/checkpoints/pi0_aloha_sim",
     ),
+    EnvMode.ALOHA_PI0_TRANSFER_CUBE_SCRIPT: Checkpoint(
+        config="pi0_aloha_sim",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim/pi0_aloha_transfer_cube_scripted/14999",
+    ),
+    EnvMode.ALOHA_PI0_TRANSFER_CUBE_HUMAN: Checkpoint(
+        config="pi0_aloha_sim",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim/pi0_aloha_transfer_cube_human/14999",
+    ),
+    EnvMode.ALOHA_PI0_INSERTION_SCRIPT: Checkpoint(
+        config="pi0_aloha_sim",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim/pi0_aloha_insertion_scripted/14999",
+    ),
+    EnvMode.ALOHA_PI0_INSERTION_HUMAN: Checkpoint(
+        config="pi0_aloha_sim",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim/pi0_aloha_insertion_human/14999",
+    ),
+    EnvMode.ALOHA_PI0_GRID_TRANSFER_CUBE_SCRIPT: Checkpoint(
+        config="pi0_aloha_sim_grid",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim_grid/pi0_aloha_grid_transfer_cube_scripted/14999",
+    ),
+    EnvMode.ALOHA_PI0_GRID_TRANSFER_CUBE_HUMAN: Checkpoint(
+        config="pi0_aloha_sim_grid",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim_grid/pi0_aloha_grid_transfer_cube_human/14999",
+    ),
+    EnvMode.ALOHA_PI0_GRID_INSERTION_SCRIPT: Checkpoint(
+        config="pi0_aloha_sim_grid",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim_grid/pi0_aloha_grid_insertion_scripted/14999",
+    ),
+    EnvMode.ALOHA_PI0_GRID_INSERTION_HUMAN: Checkpoint(
+        config="pi0_aloha_sim_grid",
+        dir="/hdd/fediory/checkpoints/pi0_aloha_sim_grid/pi0_aloha_grid_insertion_human/14999",
+    ),
     EnvMode.DROID: Checkpoint(
         config="pi05_droid",
         dir="gs://openpi-assets/checkpoints/pi05_droid",
     ),
-    EnvMode.LIBERO: Checkpoint(
+    EnvMode.LIBERO_PI0: Checkpoint(
+        config="pi0_libero",
+        dir="gs://openpi-assets/checkpoints/pi0_libero",
+    ),
+    EnvMode.LIBERO_PI0_GRID: Checkpoint(
+        config="pi0_libero_grid",
+        dir="/hdd/fediory/checkpoints/pi0_libero_grid/pi0_libero_grid_max/29999",
+    ),
+    EnvMode.LIBERO_PI0_GRID8: Checkpoint(
+        config="pi0_libero_grid8",
+        dir="/hdd/fediory/checkpoints/pi0_libero_grid8/pi0_libero_grid8/29999",
+    ),
+    EnvMode.LIBERO_PI0_GRID4: Checkpoint(
+        config="pi0_libero_grid4",
+        dir="/hdd/fediory/checkpoints/pi0_libero_grid4/pi0_libero_grid4/29999",
+    ),
+    EnvMode.LIBERO_PI05: Checkpoint(
         config="pi05_libero",
         dir="gs://openpi-assets/checkpoints/pi05_libero",
     ),
+    EnvMode.LIBERO_PI05_BASE: Checkpoint(
+        config="pi05_libero",
+        dir="gs://openpi-assets/checkpoints/pi05_base",
+    ),
+    # EnvMode.LIBERO_PI05_LORA: Checkpoint(
+    #     config="pi05_libero_lora",
+    #     dir="/hdd/fediory/checkpoints/pi05_libero_lora/pi05_libero_lora/5000",
+    # ),
+    EnvMode.LIBERO_PI05_GRID32: Checkpoint(
+        config="pi05_libero_grid32",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid32/pi05_libero_grid32/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID: Checkpoint(
+        config="pi05_libero_grid",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid/pi05_libero_grid/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID12: Checkpoint(
+        config="pi05_libero_grid12",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid12/pi05_libero_grid12/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID10: Checkpoint(
+        config="pi05_libero_grid10",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid10/pi05_libero_grid10/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID8: Checkpoint(
+        config="pi05_libero_grid8",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid8/pi05_libero_grid8/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID6: Checkpoint(
+        config="pi05_libero_grid6",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid6/pi05_libero_grid6/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID4: Checkpoint(
+        config="pi05_libero_grid4",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid4/pi05_libero_grid4/29999",
+    ),
+    EnvMode.LIBERO_PI05_GRID1: Checkpoint(
+        config="pi05_libero_grid1",
+        dir="/hdd/fediory/checkpoints/pi05_libero_grid1/pi05_libero_grid1/29999",
+    ),
+    # EnvMode.LIBERO_PI05_GRID_LORA: Checkpoint(
+    #     config="pi05_libero_grid_lora",
+    #     dir="/hdd/fediory/checkpoints/pi05_libero_grid_lora/pi05_libero_grid_lora/29999",
+    # ),
 }
 
 

@@ -8,6 +8,7 @@ import torch.nn.functional as F  # noqa: N812
 
 import openpi.models.gemma as _gemma
 from openpi.models_pytorch.gemma_pytorch import PaliGemmaWithExpertModel
+from openpi.models_pytorch.grid_pytorch import ActiveTokenSamplerTorch
 import openpi.models_pytorch.preprocessing_pytorch as _preprocessing
 
 
@@ -86,9 +87,23 @@ class PI0Pytorch(nn.Module):
         super().__init__()
         self.config = config
         self.pi05 = config.pi05
+        self.grid = getattr(config, "grid", False)
 
         paligemma_config = _gemma.get_config(config.paligemma_variant)
         action_expert_config = _gemma.get_config(config.action_expert_variant)
+
+        if self.grid:
+            self.active_token_sampler = ActiveTokenSamplerTorch(
+                vision_dim=paligemma_config.width,
+                num_tokens=getattr(config, "num_token_samples", 16),
+                embed_coords=getattr(config, "embed_coords", True),
+                log_pred_coords=getattr(config, "log_active_token_coords", False),
+                pred_coords_log_path=getattr(
+                    config, "active_token_coords_log_path", "active_token_pred_coords.log"
+                ),
+            )
+        else:
+            self.active_token_sampler = None
 
         self.paligemma_with_expert = PaliGemmaWithExpertModel(
             paligemma_config,
@@ -200,6 +215,23 @@ class PI0Pytorch(nn.Module):
                 return self.paligemma_with_expert.embed_image(img)
 
             img_emb = self._apply_checkpoint(image_embed_func, img)
+
+            if self.grid:
+                if self.active_token_sampler is None:
+                    raise RuntimeError("grid=True but active_token_sampler is not initialized")
+                bsize, num_img_embs = img_emb.shape[:2]
+                size = int(num_img_embs**0.5)
+                if size * size != num_img_embs:
+                    raise ValueError(
+                        f"grid=True requires a square ViT token grid; got num_img_embs={num_img_embs}"
+                    )
+                img_emb_2d = img_emb.reshape(bsize, size, size, -1)
+
+                def grid_sample_func(x):
+                    sampled, _ = self.active_token_sampler(x, noise=False)
+                    return sampled
+
+                img_emb = self._apply_checkpoint(grid_sample_func, img_emb_2d)
 
             bsize, num_img_embs = img_emb.shape[:2]
 

@@ -393,6 +393,70 @@ def slice_gemma_state_dict(state_dict, config, *, num_expert, checkpoint_dir, pi
     return final_state_dict
 
 
+def _projection_leaf_array(kernel_or_bias):
+    """Unpack NNX-style {'value': arr} or raw array (same as projection head conversion)."""
+    if isinstance(kernel_or_bias, dict):
+        return np.array(kernel_or_bias["value"])
+    return np.array(kernel_or_bias)
+
+
+def convert_action_active_sampler_params(
+    projection_params: dict, model_config: openpi.models.pi0_config.Pi0Config
+) -> dict[str, torch.Tensor]:
+    """Map JAX `action_active_sampler` (grid) weights to PyTorch `active_token_sampler` state dict."""
+    if not getattr(model_config, "grid", False):
+        return {}
+
+    jax_sampler = projection_params.get("action_active_sampler")
+    if jax_sampler is None:
+        print(
+            "[convert] Checkpoint has no `action_active_sampler`; "
+            "PyTorch `active_token_sampler` keeps random init (expected for non-grid checkpoints)."
+        )
+        return {}
+
+    def get_dense_pair(subtree, layer_key: str) -> tuple[np.ndarray, np.ndarray]:
+        layer = subtree[layer_key]
+        kernel = _projection_leaf_array(layer["kernel"])
+        bias = _projection_leaf_array(layer["bias"])
+        return kernel, bias
+
+    pt_prefix = "active_token_sampler"
+    out: dict[str, torch.Tensor] = {}
+
+    try:
+        scout = jax_sampler["scout_mlp"]
+        w, b = get_dense_pair(scout, "layers_0")
+        out[f"{pt_prefix}.scout_mlp.0.weight"] = torch.from_numpy(w).T
+        out[f"{pt_prefix}.scout_mlp.0.bias"] = torch.from_numpy(b)
+        w, b = get_dense_pair(scout, "layers_2")
+        out[f"{pt_prefix}.scout_mlp.2.weight"] = torch.from_numpy(w).T
+        out[f"{pt_prefix}.scout_mlp.2.bias"] = torch.from_numpy(b)
+    except (KeyError, TypeError) as e:
+        raise ValueError(f"Failed to read action_active_sampler/scout_mlp from checkpoint: {e}") from e
+
+    if model_config.embed_coords:
+        enc = jax_sampler.get("coord_encoder")
+        if enc is None:
+            print(
+                "[convert] Warning: model_config.embed_coords=True but checkpoint has no coord_encoder; "
+                "coord embedding weights stay random."
+            )
+        else:
+            try:
+                w, b = get_dense_pair(enc, "layers_0")
+                out[f"{pt_prefix}.coord_encoder.0.weight"] = torch.from_numpy(w).T
+                out[f"{pt_prefix}.coord_encoder.0.bias"] = torch.from_numpy(b)
+                w, b = get_dense_pair(enc, "layers_2")
+                out[f"{pt_prefix}.coord_encoder.2.weight"] = torch.from_numpy(w).T
+                out[f"{pt_prefix}.coord_encoder.2.bias"] = torch.from_numpy(b)
+            except (KeyError, TypeError) as e:
+                raise ValueError(f"Failed to read action_active_sampler/coord_encoder from checkpoint: {e}") from e
+
+    print(f"[convert] Loaded grid sampler weights: {len(out)} tensors")
+    return out
+
+
 def slice_initial_orbax_checkpoint(checkpoint_dir: str, restore_precision: str | None = None):
     """Load and process params by restoring via JAX model loader first.
     This respects dtype conversions that occur during model restore.
@@ -513,8 +577,10 @@ def convert_pi0_checkpoint(
     # Instantiate model
     pi0_model = openpi.models_pytorch.pi0_pytorch.PI0Pytorch(model_config)
 
+    grid_params = convert_action_active_sampler_params(initial_params["projection_params"], model_config)
+
     # Combine all parameters (no prefix needed for our model structure)
-    all_params = {**paligemma_params, **gemma_params, **projection_params}
+    all_params = {**paligemma_params, **gemma_params, **projection_params, **grid_params}
 
     # Load state dict
     pi0_model.load_state_dict(all_params, strict=False)
@@ -547,6 +613,9 @@ def convert_pi0_checkpoint(
         "paligemma_variant": model_config.paligemma_variant,
         "action_expert_variant": model_config.action_expert_variant,
         "precision": precision,
+        "grid": model_config.grid,
+        "num_token_samples": model_config.num_token_samples,
+        "embed_coords": model_config.embed_coords,
     }
     with open(os.path.join(output_path, "config.json"), "w") as f:
         json.dump(config_dict, f, indent=2)

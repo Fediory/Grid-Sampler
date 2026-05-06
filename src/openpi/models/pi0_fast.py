@@ -14,7 +14,7 @@ import openpi.models.gemma_fast as _gemma
 import openpi.models.siglip as _siglip
 from openpi.shared import array_typing as at
 import openpi.shared.nnx_utils as nnx_utils
-
+from openpi.models.grid import ActiveTokenSampler
 logger = logging.getLogger("openpi")
 
 PALIGEMMA_EOS_TOKEN = 1
@@ -82,6 +82,13 @@ class Pi0FASTConfig(_model.BaseModelConfig):
     action_dim: int = 32
     action_horizon: int = 32
     max_token_len: int = 250
+    
+    # Grid-based active token sampling
+    grid: bool = False
+    num_token_samples: int = 16
+    embed_coords: bool = True
+    log_active_token_coords: bool = False
+    active_token_coords_log_path: str = "active_token_pred_coords.log"
 
     # Tokenizer for the fast model.
     fast_model_tokenizer: Any | None = None
@@ -155,6 +162,22 @@ class Pi0FAST(_model.BaseModel):
         )
         img.lazy_init(next(iter(config.fake_obs().images.values())), train=False, rngs=rngs)
         self.PaliGemma = nnx.Dict(llm=llm, img=img)
+        
+        self.grid = config.grid
+        if config.grid:
+            sampler_module = ActiveTokenSampler(
+                vision_dim=paligemma_config.width, 
+                num_tokens=config.num_token_samples, 
+                embed_coords=config.embed_coords,
+                log_pred_coords=config.log_active_token_coords,
+                pred_coords_log_path=config.active_token_coords_log_path,
+            )
+            self.action_active_sampler = nnx_bridge.ToNNX(sampler_module)
+            dummy_input = jnp.zeros(
+                (1, config.num_token_samples, config.num_token_samples, paligemma_config.width), 
+                dtype=jnp.bfloat16
+            )
+            self.action_active_sampler.lazy_init(dummy_input, rngs=rngs)
 
     @at.typecheck
     def embed_inputs(
@@ -167,6 +190,22 @@ class Pi0FAST(_model.BaseModel):
         for name in obs.images:
             image_token_embeddings, _ = self.PaliGemma.img(obs.images[name], train=False)
 
+            if self.grid:
+                B, N, C = image_tokens.shape
+                size = int(N**0.5)
+                image_tokens_2d = image_tokens.reshape(B, size, size, C)
+
+                # Generate Sampled Tokens
+                sampled_tokens, coords = self.action_active_sampler(
+                    image_tokens_2d, 
+                    # We add noise during sampling to encourage exploration, 
+                    # but not during training to stabilize optimization. 
+                    # You can experiment with this if you like.
+                    noise=False,
+                )
+                image_tokens = sampled_tokens
+            
+            
             token_embeddings.append(image_token_embeddings)
             input_mask.append(
                 einops.repeat(

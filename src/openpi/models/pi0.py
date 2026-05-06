@@ -12,7 +12,7 @@ from openpi.models import pi0_config
 import openpi.models.gemma as _gemma
 import openpi.models.siglip as _siglip
 from openpi.shared import array_typing as at
-
+from openpi.models.grid import ActiveTokenSampler
 logger = logging.getLogger("openpi")
 
 
@@ -67,6 +67,7 @@ class Pi0(_model.BaseModel):
     def __init__(self, config: pi0_config.Pi0Config, rngs: nnx.Rngs):
         super().__init__(config.action_dim, config.action_horizon, config.max_token_len)
         self.pi05 = config.pi05
+        self.grid = config.grid
         paligemma_config = _gemma.get_config(config.paligemma_variant)
         action_expert_config = _gemma.get_config(config.action_expert_variant)
         # TODO: rewrite gemma in NNX. For now, use bridge.
@@ -89,6 +90,22 @@ class Pi0(_model.BaseModel):
         )
         img.lazy_init(next(iter(config.fake_obs().images.values())), train=False, rngs=rngs)
         self.PaliGemma = nnx.Dict(llm=llm, img=img)
+        
+        if config.grid:
+            sampler_module = ActiveTokenSampler(
+                vision_dim=paligemma_config.width, 
+                num_tokens=config.num_token_samples, 
+                embed_coords=config.embed_coords,
+                log_pred_coords=config.log_active_token_coords,
+                pred_coords_log_path=config.active_token_coords_log_path,
+            )
+            self.action_active_sampler = nnx_bridge.ToNNX(sampler_module)
+            dummy_input = jnp.zeros(
+                (1, config.num_token_samples, config.num_token_samples, paligemma_config.width), 
+                dtype=jnp.bfloat16
+            )
+            self.action_active_sampler.lazy_init(dummy_input, rngs=rngs)
+            
         self.action_in_proj = nnx.Linear(config.action_dim, action_expert_config.width, rngs=rngs)
         if config.pi05:
             self.time_mlp_in = nnx.Linear(action_expert_config.width, action_expert_config.width, rngs=rngs)
@@ -112,6 +129,23 @@ class Pi0(_model.BaseModel):
         # embed images
         for name in obs.images:
             image_tokens, _ = self.PaliGemma.img(obs.images[name], train=False)
+            
+            if self.grid:
+                B, N, C = image_tokens.shape
+                size = int(N**0.5)
+                image_tokens_2d = image_tokens.reshape(B, size, size, C)
+
+                # Generate Sampled Tokens
+                sampled_tokens, coords = self.action_active_sampler(
+                    image_tokens_2d, 
+                    # We add noise during sampling to encourage exploration, 
+                    # but not during training to stabilize optimization. 
+                    # You can experiment with this if you like.
+                    noise=False, 
+                )
+                
+                # sampled_tokens = top_k_tokens(image_tokens_2d, k=self.k)
+                image_tokens = sampled_tokens
 
             tokens.append(image_tokens)
             input_mask.append(
