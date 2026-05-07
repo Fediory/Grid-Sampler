@@ -21,6 +21,41 @@ DEFAULT_CACHE_DIR = "/hdd/fediory/.cache/openpi"
 logger = logging.getLogger(__name__)
 
 
+def _try_parse_hf_repo_id(parsed: urllib.parse.ParseResult) -> str | None:
+    """Return `namespace/name` for Hugging Face model repos, or None."""
+    if parsed.scheme == "hf":
+        rid = f"{parsed.netloc}{parsed.path}".strip("/")
+        return rid or None
+    if parsed.scheme in ("http", "https"):
+        host = parsed.netloc.lower().removeprefix("www.")
+        if host != "huggingface.co":
+            return None
+        parts = [p for p in parsed.path.split("/") if p]
+        if len(parts) < 2:
+            return None
+        if parts[0] in ("datasets", "spaces", "docs", "blog"):
+            return None
+        return f"{parts[0]}/{parts[1]}"
+    return None
+
+
+def _download_hf_snapshot(repo_id: str, *, force_download: bool = False) -> pathlib.Path:
+    try:
+        from huggingface_hub import snapshot_download
+    except ImportError as e:
+        raise ImportError(
+            "Loading Hugging Face checkpoints requires `huggingface_hub`. Install it with your package manager "
+            "(e.g. `uv pip install huggingface_hub`)."
+        ) from e
+
+    cache_dir = str(get_cache_dir() / "hf")
+    logger.info("Downloading Hugging Face snapshot %s to cache under %s", repo_id, cache_dir)
+    path = snapshot_download(repo_id=repo_id, cache_dir=cache_dir, force_download=force_download)
+    out = pathlib.Path(path).resolve()
+    _ensure_permissions(out)
+    return out
+
+
 def get_cache_dir() -> pathlib.Path:
     cache_dir = pathlib.Path(os.getenv(_OPENPI_DATA_HOME, DEFAULT_CACHE_DIR)).expanduser().resolve()
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -53,6 +88,10 @@ def maybe_download(url: str, *, force_download: bool = False, **kwargs) -> pathl
         if not path.exists():
             raise FileNotFoundError(f"File not found at {url}")
         return path.resolve()
+
+    hf_repo = _try_parse_hf_repo_id(parsed)
+    if hf_repo is not None:
+        return _download_hf_snapshot(hf_repo, force_download=force_download)
 
     cache_dir = get_cache_dir()
 
