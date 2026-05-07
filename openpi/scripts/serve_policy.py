@@ -64,15 +64,15 @@ class Args:
 DEFAULT_CHECKPOINT: dict[EnvMode, Checkpoint] = {
     EnvMode.ALOHA_PI0_GRID_TRANSFER_CUBE_SCRIPT: Checkpoint(
         config="pi0_aloha_sim_grid_transfer_cube_scripted",
-        dir="https://huggingface.co/Fediory/pi0_aloha_sim_grid_transfer_cube_scripted",
+        dir="https://huggingface.co/Fediory/pi0_aloha_grid_transfer_cube_scripted",
     ),
     EnvMode.ALOHA_PI0_GRID_TRANSFER_CUBE_HUMAN: Checkpoint(
         config="pi0_aloha_sim_grid_transfer_cube_human",
-        dir="https://huggingface.co/Fediory/pi0_aloha_sim_grid_transfer_cube_human",
+        dir="https://huggingface.co/Fediory/pi0_aloha_grid_transfer_cube_human",
     ),
     EnvMode.ALOHA_PI0_GRID_INSERTION_SCRIPT: Checkpoint(
         config="pi0_aloha_sim_grid_insertion_scripted",
-        dir="https://huggingface.co/Fediory/pi0_aloha_insertion_scripted",
+        dir="https://huggingface.co/Fediory/pi0_aloha_grid_insertion_scripted",
     ),
     EnvMode.ALOHA_PI0_GRID_INSERTION_HUMAN: Checkpoint(
         config="pi0_aloha_sim_grid_insertion_human",
