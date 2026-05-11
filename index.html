@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Models — ICML 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grid Sampler — ICML 2026</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1'/%3E%3Cstop offset='100%25' style='stop-color:%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%23f1f5f9'/%3E%3Cpath fill='none' stroke='url(%23g)' stroke-width='1.2' d='M8 10h16M8 16h16M8 22h16M10 8v16M16 8v16M22 8v16'/%3E%3C/svg%3E" type="image/svg+xml">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* Page backdrop: soft aurora + subtle grid (on-theme for “Grid Sampler”) */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      color: #1e293b;
+      min-height: 100vh;
+      background-color: #eef2f6;
+      background-image:
+        linear-gradient(rgba(100, 116, 139, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 116, 139, 0.045) 1px, transparent 1px),
+        radial-gradient(ellipse 110% 65% at 50% -12%, rgba(99, 102, 241, 0.16), transparent 58%),
+        radial-gradient(ellipse 50% 42% at 92% 28%, rgba(244, 114, 182, 0.09), transparent 52%),
+        radial-gradient(ellipse 48% 38% at 8% 72%, rgba(56, 189, 248, 0.11), transparent 50%),
+        linear-gradient(168deg, #f8fafc 0%, #eef2ff 38%, #f5f3ff 72%, #faf8f5 100%);
+      background-size: 44px 44px, 44px 44px, auto, auto, auto, auto;
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, h5, h6, .title { font-family: 'Google Sans', sans-serif; }
+
+    .page-hero {
+      position: relative;
+      background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.72) 0%,
+        rgba(248, 250, 252, 0.35) 55%,
+        rgba(255, 255, 255, 0) 100%);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    }
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0; height: 120px;
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent, rgba(238, 242, 246, 0.5));
+    }
+    .page-hero .hero-body { position: relative; z-index: 1; }
+
+    .section-soft {
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.65);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .section-plain {
+      background: transparent;
+    }
+
+    .author-block { display: inline-block; margin: 0 6px 8px; font-size: 1.05rem; }
+    .publication-title {
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+    .subtitle-paper { font-size: 1.25rem; color: #334155; margin-bottom: 1.25rem; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .affiliation-block { font-size: 1.05rem; color: #64748b; margin-bottom: 1rem; }
+    .venue-block { font-size: 1.15rem; font-weight: bold; color: #b91c1c; margin-bottom: 1.25rem; letter-spacing: 0.02em; }
+    .link-block { margin: 6px; display: inline-block; }
+    .teaser-video {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow:
+        0 4px 6px -1px rgba(15, 23, 42, 0.06),
+        0 12px 28px -8px rgba(79, 70, 229, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+    }
+    .abstract-content { text-align: justify; font-size: 1.05rem; line-height: 1.65; }
+    .bibtex-section {
+      background: rgba(248, 250, 252, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    }
+    section { padding: 2.5rem 1.5rem; }
+    .hero-body { padding-bottom: 1.5rem; }
+    .news-list { text-align: left; max-width: 640px; margin: 0 auto; font-size: 0.95rem; }
+    .todo-list { text-align: left; max-width: 640px; margin: 0 auto; font-size: 0.95rem; }
+    .result-img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      margin-top: 12px;
+    }
+    details.summary-box {
+      max-width: 800px;
+      margin: 0 auto 1rem;
+      text-align: left;
+      border: 1px solid rgba(148, 163, 184, 0.15) !important;
+      border-radius: 12px !important;
+      background: rgba(255, 255, 255, 0.65) !important;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    details.summary-box:hover {
+      box-shadow: 0 8px 28px rgba(79, 70, 229, 0.08);
+      border-color: rgba(99, 102, 241, 0.25) !important;
+    }
+    details.summary-box summary { cursor: pointer; font-weight: 600; color: #334155; }
+
+    .footer-site {
+      background: rgba(241, 245, 249, 0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .footer-site a { color: #4f46e5; }
+
+    /* Key result — gradient headline */
+    .hero-highlight-wrap {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto 1.75rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      background: linear-gradient(145deg,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(238, 242, 255, 0.65) 45%,
+        rgba(252, 231, 243, 0.5) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow:
+        0 4px 24px rgba(79, 70, 229, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.95) inset;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-highlight-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(125deg, #6366f1, #22d3ee, #e11d48, #f59e0b);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+      opacity: 0.85;
+    }
+    .hero-highlight-text {
+      display: block;
+      font-weight: 700;
+      font-size: clamp(0.92rem, 1.85vw, 1.28rem);
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      background: linear-gradient(100deg, #3730a3 0%, #0e7490 28%, #be185d 62%, #c2410c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #3730a3;
+    }
+    @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+      .hero-highlight-text { color: transparent; }
+    }
+    .hero-highlight-text .hl-token {
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    @media (min-width: 900px) {
+      .hero-highlight-text {
+        white-space: nowrap;
+      }
+    }
+
+    /* Section headings — subtle accent bar */
+    .section-heading {
+      position: relative;
+      margin-bottom: 1.75rem !important;
+    }
+    .section-heading::after {
+      content: "";
+      display: block;
+      height: 4px;
+      width: min(12rem, 42%);
+      margin: 0.5rem auto 0;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #6366f1, #22d3ee, #e11d48);
+      opacity: 0.85;
+    }
+
+    /* Buttons */
+    .publication-links .button {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .publication-links .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+    }
+    .publication-links .button:active {
+      transform: translateY(0);
+    }
+
+    /* Demo cards */
+    .demo-card {
+      border-radius: 14px;
+      padding: 0.5rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .demo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .abstract-content a:not(.button) {
+      color: #4f46e5;
+      text-decoration: underline;
+      text-decoration-color: rgba(79, 70, 229, 0.35);
+      text-underline-offset: 3px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+    .abstract-content a:not(.button):hover {
+      color: #7c3aed;
+      text-decoration-color: rgba(124, 58, 237, 0.6);
+    }
+
+    /* BibTeX copy */
+    .bibtex-wrap {
+      position: relative;
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+    .bibtex-wrap .bibtex-section {
+      padding-top: 3rem;
+    }
+    .bibtex-copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(6px);
+      border-radius: 999px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+    .bibtex-copy-btn:hover {
+      background: #fff;
+      color: #4f46e5;
+      border-color: rgba(99, 102, 241, 0.45);
+    }
+    .bibtex-copy-btn.copied {
+      color: #059669;
+      border-color: rgba(5, 150, 105, 0.4);
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      right: 1.25rem;
+      bottom: 1.25rem;
+      z-index: 100;
+      width: 3rem;
+      height: 3rem;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      box-shadow: 0 6px 24px rgba(79, 70, 229, 0.35);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+    }
+    .back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      box-shadow: 0 8px 28px rgba(79, 70, 229, 0.45);
+      transform: translateY(-2px);
+    }
+    .back-to-top.is-visible:hover { transform: translateY(-2px); }
+
+    [data-aos] { pointer-events: auto; }
+  </style>
+</head>
+<body>
+
+<section class="hero page-hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Grid Sampler</h1>
+          <p class="subtitle-paper"><strong>See What Matters:</strong> Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model</p>
+
+          <div class="is-size-6">
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=WljJ2HUAAAAJ">Yixu Feng</a><sup>1</sup></span>
+            <span class="author-block"><a href="https://openreview.net/profile?id=~Zinan_Zhao1">Zinan Zhao</a><sup>2</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=mBHSbeIAAAAJ">Yanxiang Ma</a><sup>1</sup></span>
+            <span class="author-block"><a href="https://openreview.net/profile?id=~Chenghao_Xia1">Chenghao Xia</a><sup>3</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=guY3iCsAAAAJ">Chengbin Du</a><sup>3</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=m4wbcOsAAAAJ">Yunke Wang</a><sup>1</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=N4F_3eoAAAAJ">Chang Xu</a><sup>1</sup></span>
+          </div>
+
+          <div class="affiliation-block">
+            <sup>1</sup>University of Sydney  <br>
+            <sup>2</sup>City University of Hong Kong  <br>
+            <sup>3</sup>StellarEdge Robotics  <br>
+          </div>
+
+          <div class="venue-block">ICML 2026</div>
+
+          <p class="hero-highlight-wrap">
+            <span class="hero-highlight-text">
+              GridS uses only <span class="hl-token">1</span> visual token yet matches a <span class="hl-token">256</span>-token dense baseline.
+            </span>
+          </p>
+
+          <div class="has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="button is-dark is-rounded" title="PDF (to appear)">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="button is-dark is-rounded" title="arXiv (to appear)">
+                  <span class="icon"><i class="fas fa-archive"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/Fediory/Grid-Sampler" class="button is-dark is-rounded">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/collections/Fediory/grid-sampler" class="button is-dark is-rounded">
+                  <span class="icon"><i class="fa-solid fa-robot"></i></span>
+                  <span>Models</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-plain" style="padding-top: 0;" data-aos="fade-up" data-aos-duration="700">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-heading">Demo</h2>
+    <div class="columns is-multiline is-centered">
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_pen.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Pen</strong></p>
+        </div>
+      </div>
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_pick.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Pick</strong></p>
+        </div>
+      </div>
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_stack.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Stack</strong></p>
+        </div>
+      </div>
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_pen_ood.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Pen (OOD)</strong></p>
+        </div>
+      </div>
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="50" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_pick_ood.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Pick (OOD)</strong></p>
+        </div>
+      </div>
+      <div class="column is-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
+        <div class="demo-card">
+        <video class="teaser-video" controls muted loop playsinline>
+          <source src="demo/GridS_demo_stack_ood.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered mt-2"><strong>Stack (OOD)</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-plain" data-aos="fade-up" data-aos-duration="700">
+    <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-heading">Results</h2>
+    <div class="columns is-centered mt-4">
+      <div class="column is-10">
+        <details class="box summary-box">
+          <summary>LIBERO</summary>
+          <img src="assets/main_result1.png" alt="LIBERO results" class="result-img">
+          <p class="is-size-7 has-text-grey-dark mt-3 mb-2" style="text-align: justify; line-height: 1.55;">
+            Comparison of Model Efficiency and Performance on LIBERO dataset (Liu et al., 2023). We report efficiency metrics (visual tokens, FLOPs, completion time) and success rate across different task categories. We follow VLASH (Tang et al., 2025) to calculate the average duration and steps of task completion. All efficiency calculations are evaluated on a single RTX Pro6000 GPU and in 32 language tokens. The symbol <sup>†</sup> represents the training-free pruning methods, which forced to operate post-training at test time, leading to inherent performance degradation. (We note that VLA-Cache is not strictly a pruning method, but a token-cached speeding-up method. However, since many pruning methods are also compared with it, we also provide the result here.)
+          </p>
+        </details>
+        <details class="box summary-box">
+          <summary>Real-world</summary>
+          <img src="assets/main_result2.png" alt="Real-world results" class="result-img">
+          <div class="is-size-7 has-text-grey-dark mt-3 mb-2" style="text-align: justify; line-height: 1.55;">
+            <p class="mb-2"><strong>Real-world evaluation on the SO100 robot arm.</strong></p>
+            <p class="mb-2"><strong>(a)</strong> Execution rollouts of three language-conditioned tasks: <em>Pick &amp; Place</em>, <em>Stack Cubes</em>, and <em>Transfer Pen</em>.</p>
+            <p class="mb-2"><strong>(b)</strong> The corresponding Out-of-Distribution (OOD) test scenarios, featuring unseen distractor objects and variable spatial arrangements. We schemed 21 different OOD scenarios.</p>
+            <p class="mb-0"><strong>(c)</strong> Quantitative comparison of Success Rate (%) and Execution Time (s). Our proposed method, <strong>GridS</strong>, consistently outperforms the baseline across all tasks. Notably, in the challenging <em>Stack Cubes</em> task, GridS achieves a <strong>+52.4%</strong> increase in success rate and demonstrates superior generalization in OOD settings where the baseline frequently fails.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-soft" data-aos="fade-up" data-aos-duration="700">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered section-heading">Core idea</h2>
+        <div class="content abstract-content">
+          <p class="mb-4"><em>Overview of the GridS Token Pruning framework.</em></p>
+          <p>
+            <strong>(a) Standard Dense Representation:</strong>
+            An input image (<em>H</em><sub>R</sub> and <em>W</em><sub>R</sub> denote the original image resolution) is processed by a visual encoder with ViT-style embeddings (Dosovitskiy et al., 2020) to generate dense visual tokens (<em>H</em> &times; <em>W</em> &times; <em>C</em>), capturing full spatial details.
+          </p>
+          <p>
+            <strong>(b) GridS Token Pruning Module:</strong>
+            This module identifies salient regions to sample a sparse set of visual tokens (<em>K</em> &times; <em>C</em>), which includes two stages: (1) Global Coordinate Prediction, and (2) Grid Sampling with Geometry Injection. By ensuring the token count is significantly smaller than the dense spatial resolution (<em>K</em> ≪ <em>H</em> &times; <em>W</em>), it achieves efficient representation for the downstream Transformer.
+          </p>
+        </div>
+        <img src="assets/core_idea.png" alt="Grid Sampler overview" class="result-img" style="margin-top: 1.5rem;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-plain" data-aos="fade-up" data-aos-duration="700">
+    <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered section-heading">Abstract</h2>
+        <div class="content abstract-content">
+          <p>
+            Vision-Language-Action (VLA) models have shown remarkable promise in robotics manipulation, yet their high computational cost hinders real-time deployment. Existing token pruning methods suffer from a fundamental trade-off: aggressive compression using pruning inevitably discards critical geometric details like contact points, leading to severe performance degradation. This forces a compromise, limiting the achievable compression rate and thus the potential speedup. We argue that breaking this trade-off requires rethinking compression as a geometry-aware, continuous token resampling in the vision encoder.
+          </p>
+          <p>
+            To this end, we propose the <em>Differentiable Grid Sampler (GridS)</em>, a plug-and-play module that performs task-aware, continuous resampling of visual tokens in VLA. By adaptively predicting a minimal set of salient coordinates and extracting features via differentiable interpolation, GridS preserves essential spatial information while achieving drastic compression (with fewer than 10% of the original visual tokens). Experiments on both the LIBERO benchmark and a real robotic platform, validating the lowest feasible visual token count reported to date, show that GridS achieves a 76% reduction in FLOPs with no degradation in the success rate.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-soft" id="introduction" data-aos="fade-up" data-aos-duration="700">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-heading">Introduction</h2>
+    
+    <div class="columns is-vcentered mt-5">
+      <div class="column is-half">
+        <h3 class="title is-4" style="color: #1e293b;">The Bottleneck & The Flaw of Discrete Pruning</h3>
+        <div class="content abstract-content">
+          <p>
+            Vision-Language-Action (VLA) models demonstrate strong generalization but suffer from prohibitive computational costs due to dense visual tokens (e.g., 256 tokens per image). 
+          </p>
+          <p>
+            Current token pruning methods attempt to solve this by discretely dropping patches over a fixed grid. However, robotic interaction requires sub-patch precision. <strong>Rigid discrete selection inevitably discards critical fine-grained geometric details</strong> (like exact contact points), causing quantization errors and severe performance drops.
+          </p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <img src="assets/fig2.png" alt="Discrete Selection vs Differentiable Sampling" class="result-img">
+        <p class="is-size-7 has-text-centered has-text-grey mt-2">
+          <strong>Figure:</strong> Discrete grids force quantization errors, while our method ensures sub-patch fidelity.
+        </p>
+      </div>
+    </div>
+
+    <div class="columns is-vcentered mt-6" style="flex-direction: row-reverse; display: flex; flex-wrap: wrap;">
+      <div class="column is-half">
+        <h3 class="title is-4" style="color: #1e293b;">Our Solution: Differentiable Grid Sampler (GridS)</h3>
+        <div class="content abstract-content">
+          <p>
+            We break the performance-efficiency trade-off by reformulating compression as a <strong>geometry-aware, continuous resampling process</strong>. Instead of being confined to a rigid output grid, <strong>GridS</strong> dynamically predicts task-driven spatial coordinates and extracts features via <em>differentiable bilinear interpolation</em>.
+          </p>
+          <p>
+            <strong>The Result:</strong> By actively localizing the most discriminative tokens, GridS operates on less than <strong>10%</strong> of the original visual compute (e.g., just 16 tokens). It not only eliminates quantization errors but massively boosts out-of-distribution (OOD) task success rates (<strong>+28.6%</strong>) by inherently filtering out irrelevant visual noise.
+          </p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <img src="assets/fig1.png" alt="GridS Motivation and Performance" class="result-img">
+        <p class="is-size-7 has-text-centered has-text-grey mt-2">
+          <strong>Figure:</strong> GridS prunes to just 6.25% compute while drastically boosting OOD success.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section section-soft" data-aos="fade-up" data-aos-duration="700">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <h2 class="title is-3 section-heading">Contact</h2>
+        <p class="abstract-content">
+          Questions and issues are welcome via the repository or email.<br>
+          <strong>Yixu Feng</strong> —
+          <a href="mailto:yfen0429@sydney.edu.au">yfen0429@sydney.edu.au</a>,
+          <a href="mailto:fedioryf@gamil.com">fedioryf@gamil.com</a><br>
+          <strong>Zinan Zhao</strong> —
+          <a href="mailto:zhao48zinan@gamil.com">zhao48zinan@gamil.com</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-plain" data-aos="fade-up" data-aos-duration="700">
+    <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered section-heading">BibTeX</h2>
+        <div class="bibtex-wrap">
+          <button type="button" class="bibtex-copy-btn" id="bibtex-copy" title="Copy to clipboard"><i class="fas fa-copy"></i> Copy</button>
+          <pre class="bibtex-section"><code id="bibtex-code">@inproceedings{feng2026gridsampler,
+  title     = {See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model},
+  author    = {Feng, Yixu and Zhao, Zinan and Ma, Yanxiang and Xia, Chenghao and Du, Chengbin and Wang, Yunke and Xu, Chang},
+  booktitle = {Forty-Third International Conference on Machine Learning (ICML)},
+  year      = {2026}
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
+
+<!-- <footer class="footer footer-site">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>Website template style inspired by academic project pages; content aligned with the repository <a href="README.md">README</a>.</p>
+    </div>
+  </div>
+</footer> -->
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 650,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 40,
+      disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    });
+
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      function toggle() {
+        btn.classList.toggle('is-visible', window.scrollY > 380);
+      }
+      window.addEventListener('scroll', toggle, { passive: true });
+      toggle();
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+
+    (function () {
+      var copyBtn = document.getElementById('bibtex-copy');
+      var codeEl = document.getElementById('bibtex-code');
+      if (!copyBtn || !codeEl) return;
+      var defaultHtml = copyBtn.innerHTML;
+      copyBtn.addEventListener('click', function () {
+        var text = codeEl.textContent;
+        function finish(ok) {
+          if (ok) {
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+            setTimeout(function () {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = defaultHtml;
+            }, 2000);
+          }
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { finish(true); }).catch(function () { finish(false); });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            if (document.execCommand('copy')) finish(true);
+          } catch (e) { /* noop */ }
+          document.body.removeChild(ta);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
