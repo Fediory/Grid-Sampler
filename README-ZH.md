@@ -6,7 +6,6 @@
 
 # Grid Sampler [ICML 2026]
 
-#### See What Matters：面向可泛化视觉-语言-动作模型的可微网格采样剪枝
 
 <p align="center">
   <a href="https://scholar.google.com/citations?user=WljJ2HUAAAAJ">Yixu Feng</a><sup>1</sup>，
@@ -18,14 +17,13 @@
   <a href="https://scholar.google.com/citations?user=N4F_3eoAAAAJ">Chang Xu</a><sup>1</sup>
 </p>
 <p align="center">
-  <sup>1</sup> 悉尼大学（University of Sydney） &nbsp;·&nbsp;
-  <sup>2</sup> 香港城市大学（City University of Hong Kong） &nbsp;·&nbsp;
+  <sup>1</sup> University of Sydney &nbsp;·&nbsp;
+  <sup>2</sup> City University of Hong Kong &nbsp;·&nbsp;
   <sup>3</sup> StellarEdge Robotics
 </p>
 
 ## 演示 Demo 🎞
 
-> **为什么在 README 里看不到内嵌播放器？** GitHub 会过滤 HTML `<video>`，因此无法在项目主页直接嵌入播放。请点击下表中的链接，在 GitHub 文件页使用**内置 MP4 播放器**观看（需已将 `demo/` 下视频推送到默认分支，如 `main`）。
 
 **域内（In-domain）**
 
@@ -48,7 +46,7 @@
 
 - ✅ 发布集成 Grid Sampler 的 openpi 代码。
 - ⬜ 发布集成 Grid Sampler 的 X-VLA（Robotwin）代码。
-- ⬜ 发布集成 Grid Sampler 的 LeRobot 真实数据代码。
+- ⬜ 发布集成 Grid Sampler 的 LeRobot 真实训练集代码。
 
 ## 结果 Results 📊
 
