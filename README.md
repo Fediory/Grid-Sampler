@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="Grid Sampler logo" width="140" />
+</p>
+
 # Grid Sampler [ICML 2026]
 
 #### See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model
