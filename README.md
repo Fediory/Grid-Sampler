@@ -87,9 +87,9 @@ Serving a fine-tuned checkpoint is covered under **Spinning up a policy server a
 ## 4. Contacts 🌔
 If you have any questions, please contact us or submit an issue to the repository! We sincerely welcome your feedback and contributions.
 
-Yixu Feng ([yfen0429@sydney.edu.au](yfen0429@sydney.edu.au) or [fedioryf@gamil.com](fedioryf@gamil.com))
+Yixu Feng ([yfen0429@sydney.edu.au](yfen0429@sydney.edu.au) or [fedioryf@gmail.com](fedioryf@gmail.com))
 
-Zinan Zhao ([zhao48zinan@gamil.com](zhao48zinan@gamil.com))
+Zinan Zhao ([zhao48zinan@gmail.com](zhao48zinan@gmail.com))
 
 You can also scan the QR code below to contact me:
 
