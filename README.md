@@ -10,25 +10,20 @@
 
 ## Demo 🎞
 
-<!-- GitHub README: <video> inside <table> often does not render. Use block-level HTML + relative paths (files must be pushed to the repo). If playback still fails, switch src to: https://raw.githubusercontent.com/<USER>/<REPO>/<BRANCH>/demo/<file>.mp4 -->
 
-<p align="center">
-  <b>Pen</b> · <b>Pick</b> · <b>Stack</b><br><br>
-  <video src="demo/GridS_demo_pen.mp4" controls muted playsinline width="32%"></video>
-  &nbsp;
-  <video src="demo/GridS_demo_pick.mp4" controls muted playsinline width="32%"></video>
-  &nbsp;
-  <video src="demo/GridS_demo_stack.mp4" controls muted playsinline width="32%"></video>
-</p>
 
-<p align="center">
-  <b>Pen (OOD)</b> · <b>Pick (OOD)</b> · <b>Stack (OOD)</b><br><br>
-  <video src="demo/GridS_demo_pen_ood.mp4" controls muted playsinline width="32%"></video>
-  &nbsp;
-  <video src="demo/GridS_demo_pick_ood.mp4" controls muted playsinline width="32%"></video>
-  &nbsp;
-  <video src="demo/GridS_demo_stack_ood.mp4" controls muted playsinline width="32%"></video>
-</p>
+**In-domain**
+
+| Pen | Pick | Stack |
+|:---:|:---:|:---:|
+| [▶ Watch `GridS_demo_pen.mp4`](demo/GridS_demo_pen.mp4) | [▶ Watch `GridS_demo_pick.mp4`](demo/GridS_demo_pick.mp4) | [▶ Watch `GridS_demo_stack.mp4`](demo/GridS_demo_stack.mp4) |
+
+**OOD**
+
+| Pen (OOD) | Pick (OOD) | Stack (OOD) |
+|:---:|:---:|:---:|
+| [▶ Watch `GridS_demo_pen_ood.mp4`](demo/GridS_demo_pen_ood.mp4) | [▶ Watch `GridS_demo_pick_ood.mp4`](demo/GridS_demo_pick_ood.mp4) | [▶ Watch `GridS_demo_stack_ood.mp4`](demo/GridS_demo_stack_ood.mp4) |
+
 
 
 ## News 🆕
