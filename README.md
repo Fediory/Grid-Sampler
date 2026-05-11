@@ -4,9 +4,24 @@
 
 # Grid Sampler [ICML 2026]
 
+[简体中文](README-ZH.md)
+
 #### See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model
 
-[Yixu Feng](https://scholar.google.com/citations?user=WljJ2HUAAAAJ), [Zinan Zhao](https://openreview.net/profile?id=~Zinan_Zhao1), [Yanxiang Ma](https://scholar.google.com/citations?user=mBHSbeIAAAAJ), [Chenghao Xia](https://openreview.net/profile?id=~Chenghao_Xia1), [Chengbin Du](https://scholar.google.com/citations?user=guY3iCsAAAAJ), [Yunke Wang](https://scholar.google.com/citations?user=m4wbcOsAAAAJ), [Chang Xu](https://scholar.google.com/citations?user=N4F_3eoAAAAJ)
+<p align="center">
+  <a href="https://scholar.google.com/citations?user=WljJ2HUAAAAJ">Yixu Feng</a><sup>1</sup>,
+  <a href="https://openreview.net/profile?id=~Zinan_Zhao1">Zinan Zhao</a><sup>2</sup>,
+  <a href="https://scholar.google.com/citations?user=mBHSbeIAAAAJ">Yanxiang Ma</a><sup>1</sup>,
+  <a href="https://openreview.net/profile?id=~Chenghao_Xia1">Chenghao Xia</a><sup>3</sup>,
+  <a href="https://scholar.google.com/citations?user=guY3iCsAAAAJ">Chengbin Du</a><sup>3</sup>,
+  <a href="https://scholar.google.com/citations?user=m4wbcOsAAAAJ">Yunke Wang</a><sup>1</sup>,
+  <a href="https://scholar.google.com/citations?user=N4F_3eoAAAAJ">Chang Xu</a><sup>1</sup>
+</p>
+<p align="center">
+  <sup>1</sup> University of Sydney &nbsp;·&nbsp;
+  <sup>2</sup> City University of Hong Kong &nbsp;·&nbsp;
+  <sup>3</sup> StellarEdge Robotics
+</p>
 
 ## Demo 🎞
 
