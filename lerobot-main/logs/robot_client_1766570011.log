@@ -1,0 +1,256 @@
+DEBUG 2025-12-24 17:53:31 d_metavar.py:22 Metavar for type None: None
+DEBUG 2025-12-24 17:53:31 formatter.py:52 action type: None, Result: , nargs: 0, default metavar: None
+DEBUG 2025-12-24 17:53:31 d_metavar.py:22 Metavar for type <class 'str'>: str
+DEBUG 2025-12-24 17:53:31 formatter.py:52 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at policy_type has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at pretrained_name_or_path has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at actions_per_chunk has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at task has a default value of 
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at server_address has a default value of localhost:8080
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at policy_device has a default value of cpu
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at chunk_size_threshold has a default value of 0.5
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at fps has a default value of 30
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at aggregate_fn_name has a default value of weighted_average
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at debug_visualize_queue_size has a default value of False
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at verify_robot_cameras has a default value of True
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'policy_type': {'required': False, 'dest': 'policy_type', 'default': None, 'help': 'Policy configuration', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'pretrained_name_or_path': {'required': False, 'dest': 'pretrained_name_or_path', 'default': None, 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 d_metavar.py:22 Metavar for type <class 'str'>: str
+DEBUG 2025-12-24 17:53:31 formatter.py:52 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.id has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.calibration_dir has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.port has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.disable_torque_on_disconnect has a default value of True
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.max_relative_target has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.cameras has a default value of {}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.use_degrees has a default value of False
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.id has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.calibration_dir has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.port has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.disable_torque_on_disconnect has a default value of True
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.max_relative_target has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.cameras has a default value of {}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.use_degrees has a default value of False
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.id has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.calibration_dir has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.port has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.disable_torque_on_disconnect has a default value of True
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.max_relative_target has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.cameras has a default value of {}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.use_degrees has a default value of False
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.urdf_path has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.target_frame_name has a default value of gripper_frame_link
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.end_effector_bounds has a default value of {'min': [-1.0, -1.0, -1.0], 'max': [1.0, 1.0, 1.0]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.max_gripper_pos has a default value of 50
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.end_effector_step_sizes has a default value of {'x': 0.02, 'y': 0.02, 'z': 0.02}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.id has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.calibration_dir has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.port has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.disable_torque_on_disconnect has a default value of True
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.max_relative_target has a default value of None
+DEBUG 2025-12-24 17:53:31 _wrapper.py:201 wrapped field at robot.cameras has a default value of {}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:168 wrapped field at robot.use_degrees has a default value of False
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'id': {'required': False, 'dest': 'robot.id', 'default': None, 'help': 'Allows to distinguish between different robots of the same type', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'calibration_dir': {'required': False, 'dest': 'robot.calibration_dir', 'default': None, 'help': 'Directory to store calibration file', 'type': typing.Optional[pathlib.Path]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'port': {'required': False, 'dest': 'robot.port', 'default': None, 'help': 'Port to connect to the arm', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'disable_torque_on_disconnect': {'required': False, 'dest': 'robot.disable_torque_on_disconnect', 'default': True, 'help': ' ', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'max_relative_target': {'required': False, 'dest': 'robot.max_relative_target', 'default': None, 'help': '`max_relative_target` limits the magnitude of the relative positional target vector for safety purposes.\nSet this to a positive scalar to have the same value for all motors, or a dictionary that maps motor\nnames to the max_relative_target value for that motor.', 'type': typing.Union[float, typing.Dict[str, float], NoneType]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'cameras': {'required': False, 'dest': 'robot.cameras', 'default': {}, 'help': 'cameras', 'type': typing.Dict[str, lerobot.cameras.configs.CameraConfig]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'use_degrees': {'required': False, 'dest': 'robot.use_degrees', 'default': False, 'help': 'Set to `True` for backward compatibility with previous policies/dataset', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'id': {'required': False, 'dest': 'robot.id', 'default': None, 'help': 'Allows to distinguish between different robots of the same type', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'calibration_dir': {'required': False, 'dest': 'robot.calibration_dir', 'default': None, 'help': 'Directory to store calibration file', 'type': typing.Optional[pathlib.Path]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'port': {'required': False, 'dest': 'robot.port', 'default': None, 'help': 'Port to connect to the arm', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'disable_torque_on_disconnect': {'required': False, 'dest': 'robot.disable_torque_on_disconnect', 'default': True, 'help': ' ', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'max_relative_target': {'required': False, 'dest': 'robot.max_relative_target', 'default': None, 'help': '`max_relative_target` limits the magnitude of the relative positional target vector for safety purposes.\nSet this to a positive scalar to have the same value for all motors, or a dictionary that maps motor\nnames to the max_relative_target value for that motor.', 'type': typing.Union[float, typing.Dict[str, float], NoneType]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'cameras': {'required': False, 'dest': 'robot.cameras', 'default': {}, 'help': 'cameras', 'type': typing.Dict[str, lerobot.cameras.configs.CameraConfig]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'use_degrees': {'required': False, 'dest': 'robot.use_degrees', 'default': False, 'help': 'Set to `True` for backward compatibility with previous policies/dataset', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'id': {'required': False, 'dest': 'robot.id', 'default': None, 'help': 'Allows to distinguish between different robots of the same type', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'calibration_dir': {'required': False, 'dest': 'robot.calibration_dir', 'default': None, 'help': 'Directory to store calibration file', 'type': typing.Optional[pathlib.Path]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'port': {'required': False, 'dest': 'robot.port', 'default': None, 'help': 'Port to connect to the arm', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'disable_torque_on_disconnect': {'required': False, 'dest': 'robot.disable_torque_on_disconnect', 'default': True, 'help': ' ', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'max_relative_target': {'required': False, 'dest': 'robot.max_relative_target', 'default': None, 'help': '`max_relative_target` limits the magnitude of the relative positional target vector for safety purposes.\nSet this to a positive scalar to have the same value for all motors, or a dictionary that maps motor\nnames to the max_relative_target value for that motor.', 'type': typing.Union[float, typing.Dict[str, float], NoneType]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'cameras': {'required': False, 'dest': 'robot.cameras', 'default': {}, 'help': 'cameras', 'type': typing.Dict[str, lerobot.cameras.configs.CameraConfig]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'use_degrees': {'required': False, 'dest': 'robot.use_degrees', 'default': False, 'help': 'Set to `True` for backward compatibility with previous policies/dataset', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'urdf_path': {'required': False, 'dest': 'robot.urdf_path', 'default': None, 'help': 'Path to URDF file for kinematics\nNOTE: It is highly recommended to use the urdf in the SO-ARM100 repo:\nhttps://github.com/TheRobotStudio/SO-ARM100/blob/main/Simulation/SO101/so101_new_calib.urdf', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'target_frame_name': {'required': False, 'dest': 'robot.target_frame_name', 'default': 'gripper_frame_link', 'help': 'End-effector frame name in the URDF', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 ocstring.py:253 Warning: Unable to parse attribute docstring:         default_factory=lambda: {
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'end_effector_bounds': {'required': False, 'dest': 'robot.end_effector_bounds', 'default': {'min': [-1.0, -1.0, -1.0], 'max': [1.0, 1.0, 1.0]}, 'help': 'Default bounds for the end-effector position (in meters)', 'type': typing.Dict[str, typing.List[float]]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'max_gripper_pos': {'required': False, 'dest': 'robot.max_gripper_pos', 'default': 50, 'help': '\n', 'type': <class 'float'>}
+DEBUG 2025-12-24 17:53:31 ocstring.py:253 Warning: Unable to parse attribute docstring:         default_factory=lambda: {
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'end_effector_step_sizes': {'required': False, 'dest': 'robot.end_effector_step_sizes', 'default': {'x': 0.02, 'y': 0.02, 'z': 0.02}, 'help': ' ', 'type': typing.Dict[str, float]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'id': {'required': False, 'dest': 'robot.id', 'default': None, 'help': 'Allows to distinguish between different robots of the same type', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'calibration_dir': {'required': False, 'dest': 'robot.calibration_dir', 'default': None, 'help': 'Directory to store calibration file', 'type': typing.Optional[pathlib.Path]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'port': {'required': False, 'dest': 'robot.port', 'default': None, 'help': 'Port to connect to the arm', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'disable_torque_on_disconnect': {'required': False, 'dest': 'robot.disable_torque_on_disconnect', 'default': True, 'help': ' ', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'max_relative_target': {'required': False, 'dest': 'robot.max_relative_target', 'default': None, 'help': '`max_relative_target` limits the magnitude of the relative positional target vector for safety purposes.\nSet this to a positive scalar to have the same value for all motors, or a dictionary that maps motor\nnames to the max_relative_target value for that motor.', 'type': typing.Union[float, typing.Dict[str, float], NoneType]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'cameras': {'required': False, 'dest': 'robot.cameras', 'default': {}, 'help': 'cameras', 'type': typing.Dict[str, lerobot.cameras.configs.CameraConfig]}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'use_degrees': {'required': False, 'dest': 'robot.use_degrees', 'default': False, 'help': 'Set to `True` for backward compatibility with previous policies/dataset', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'actions_per_chunk': {'required': False, 'dest': 'actions_per_chunk', 'default': None, 'help': 'Policies typically output K actions at max, but we can use less to avoid wasting bandwidth (as actions\nwould be aggregated on the client side anyway, depending on the value of `chunk_size_threshold`)', 'type': <class 'int'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'task': {'required': False, 'dest': 'task', 'default': '', 'help': "Task instruction for the robot to execute (e.g., 'fold my tshirt')", 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'server_address': {'required': False, 'dest': 'server_address', 'default': 'localhost:8080', 'help': 'Network configuration', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'policy_device': {'required': False, 'dest': 'policy_device', 'default': 'cpu', 'help': 'Device configuration', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'chunk_size_threshold': {'required': False, 'dest': 'chunk_size_threshold', 'default': 0.5, 'help': 'Control behavior configuration', 'type': <class 'float'>}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'fps': {'required': False, 'dest': 'fps', 'default': 30, 'help': ' ', 'type': <class 'int'>}
+DEBUG 2025-12-24 17:53:31 ocstring.py:253 Warning: Unable to parse attribute docstring:         default="weighted_average",
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'aggregate_fn_name': {'required': False, 'dest': 'aggregate_fn_name', 'default': 'weighted_average', 'help': 'Aggregate function configuration (CLI-compatible)', 'type': <class 'str'>}
+DEBUG 2025-12-24 17:53:31 ocstring.py:253 Warning: Unable to parse attribute docstring:         default=False, metadata={"help": "Visualize the action queue size"}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'debug_visualize_queue_size': {'required': False, 'dest': 'debug_visualize_queue_size', 'default': False, 'help': '\n\n\nDebug configuration', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 ocstring.py:253 Warning: Unable to parse attribute docstring:         default=True, metadata={"help": "Verify that the robot cameras match the policy cameras"}
+DEBUG 2025-12-24 17:53:31 _wrapper.py:309 Arg options for field 'verify_robot_cameras': {'required': False, 'dest': 'verify_robot_cameras', 'default': True, 'help': '\n\nVerification configuration', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:31 gparsing.py:143 
+POST PROCESSING
+
+DEBUG 2025-12-24 17:53:31 gparsing.py:144 (raw) parsed args: Namespace(server_address='127.0.0.1:8000', task='Grab the green cube and put it in the green box', policy_type='pi0.5', pretrained_name_or_path='/home/usyd/openpi/model/openpi-assets/checkpoints/pi05_base/', policy_device='cuda', actions_per_chunk='50', chunk_size_threshold='0.5', aggregate_fn_name='weighted_average', debug_visualize_queue_size='True', **{'robot.type': 'so100_follower', 'robot.port': '/dev/ttyACM1', 'robot.id': 'my_awesome_follower_arm1', 'robot.cameras': "{     front: {type: intelrealsense, serial_number_or_name: '317622074864', width: 640, height: 480, fps: 30},     wrist: {type: intelrealsense, serial_number_or_name: '218622279258', width: 640, height: 480, fps: 30}   }"})
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.scripts.server.configs.RobotClientConfig'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = policy_type, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = pretrained_name_or_path, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = robot, type = <class 'lerobot.robots.config.RobotConfig'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.robots.so100_follower.config_so100_follower.SO100FollowerConfig'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = typing.Optional[str]
+DEBUG 2025-12-24 17:53:31 decoding.py:293 Decoding a Union field: typing.Optional[str]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = port, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = cameras, type = dict[str, lerobot.cameras.configs.CameraConfig]
+DEBUG 2025-12-24 17:53:31 decoding.py:261 Decoding a Dict field: dict[str, lerobot.cameras.configs.CameraConfig]
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.cameras.realsense.configuration_realsense.RealSenseCameraConfig'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = fps, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:293 Decoding a Union field: typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = width, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = height, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = serial_number_or_name, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.cameras.realsense.configuration_realsense.RealSenseCameraConfig'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = fps, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = width, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = height, type = typing.Optional[int]
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = serial_number_or_name, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = actions_per_chunk, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = task, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = server_address, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = policy_device, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = chunk_size_threshold, type = <class 'float'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = aggregate_fn_name, type = <class 'str'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = debug_visualize_queue_size, type = <class 'bool'>
+INFO 2025-12-24 17:53:31 t_client.py:478 {'actions_per_chunk': 50,
+ 'aggregate_fn_name': 'weighted_average',
+ 'chunk_size_threshold': 0.5,
+ 'debug_visualize_queue_size': True,
+ 'fps': 30,
+ 'policy_device': 'cuda',
+ 'policy_type': 'pi0.5',
+ 'pretrained_name_or_path': '/home/usyd/openpi/model/openpi-assets/checkpoints/pi05_base/',
+ 'robot': {'calibration_dir': None,
+           'cameras': {'front': {'color_mode': <ColorMode.RGB: 'rgb'>,
+                                 'fps': 30,
+                                 'height': 480,
+                                 'rotation': <Cv2Rotation.NO_ROTATION: 0>,
+                                 'serial_number_or_name': '317622074864',
+                                 'use_depth': False,
+                                 'warmup_s': 1,
+                                 'width': 640},
+                       'wrist': {'color_mode': <ColorMode.RGB: 'rgb'>,
+                                 'fps': 30,
+                                 'height': 480,
+                                 'rotation': <Cv2Rotation.NO_ROTATION: 0>,
+                                 'serial_number_or_name': '218622279258',
+                                 'use_depth': False,
+                                 'warmup_s': 1,
+                                 'width': 640}},
+           'disable_torque_on_disconnect': True,
+           'id': 'my_awesome_follower_arm1',
+           'max_relative_target': None,
+           'port': '/dev/ttyACM1',
+           'use_degrees': False},
+ 'server_address': '127.0.0.1:8000',
+ 'task': 'Grab the green cube and put it in the green box',
+ 'verify_robot_cameras': True}
+DEBUG 2025-12-24 17:53:31 decoding.py:261 Decoding a Dict field: typing.Dict[str, lerobot.motors.motors_bus.MotorCalibration]
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:112 from_dict for <class 'lerobot.motors.motors_bus.MotorCalibration'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = id, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = drive_mode, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = homing_offset, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_min, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 decoding.py:132 Decode name = range_max, type = <class 'int'>
+DEBUG 2025-12-24 17:53:31 tors_bus.py:438 FeetechMotorsBus connected.
+DEBUG 2025-12-24 17:53:32 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.1ms
+DEBUG 2025-12-24 17:53:32 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.1ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.1ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+DEBUG 2025-12-24 17:53:33 ealsense.py:390 RealSenseCamera(317622074864) read took: 0.0ms
+INFO 2025-12-24 17:53:33 ealsense.py:193 RealSenseCamera(317622074864) connected.
+DEBUG 2025-12-24 17:53:34 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.1ms
+DEBUG 2025-12-24 17:53:34 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.1ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+DEBUG 2025-12-24 17:53:35 ealsense.py:390 RealSenseCamera(218622279258) read took: 0.0ms
+INFO 2025-12-24 17:53:35 ealsense.py:193 RealSenseCamera(218622279258) connected.
+INFO 2025-12-24 17:53:35 follower.py:104 my_awesome_follower_arm1 SO100Follower connected.
+DEBUG 2025-12-24 17:53:35 d_metavar.py:22 Metavar for type None: None
+DEBUG 2025-12-24 17:53:35 formatter.py:52 action type: None, Result: , nargs: 0, default metavar: None
+DEBUG 2025-12-24 17:53:35 d_metavar.py:22 Metavar for type <class 'str'>: str
+DEBUG 2025-12-24 17:53:35 formatter.py:52 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG 2025-12-24 17:53:35 _wrapper.py:168 wrapped field at n_obs_steps has a default value of 1
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at normalization_mapping has a default value of {}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at input_features has a default value of {}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at output_features has a default value of {}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at device has a default value of None
+DEBUG 2025-12-24 17:53:35 _wrapper.py:168 wrapped field at use_amp has a default value of False
+DEBUG 2025-12-24 17:53:35 _wrapper.py:168 wrapped field at push_to_hub has a default value of True
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at repo_id has a default value of None
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at private has a default value of None
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at tags has a default value of None
+DEBUG 2025-12-24 17:53:35 _wrapper.py:201 wrapped field at license has a default value of None
+DEBUG 2025-12-24 17:53:35 ocstring.py:253 Warning: Unable to parse attribute docstring:             current step and additional steps going back).
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'n_obs_steps': {'required': False, 'dest': 'n_obs_steps', 'default': 1, 'help': ' ', 'type': <class 'int'>}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'normalization_mapping': {'required': False, 'dest': 'normalization_mapping', 'default': {}, 'help': ' ', 'type': typing.Dict[str, lerobot.configs.types.NormalizationMode]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'input_features': {'required': False, 'dest': 'input_features', 'default': {}, 'help': ' ', 'type': typing.Dict[str, lerobot.configs.types.PolicyFeature]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'output_features': {'required': False, 'dest': 'output_features', 'default': {}, 'help': ' ', 'type': typing.Dict[str, lerobot.configs.types.PolicyFeature]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'device': {'required': False, 'dest': 'device', 'default': None, 'help': 'cuda | cpu | mp', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'use_amp': {'required': False, 'dest': 'use_amp', 'default': False, 'help': '`use_amp` determines whether to use Automatic Mixed Precision (AMP) for training and evaluation. With AMP,\nautomatic gradient scaling is used.', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'push_to_hub': {'required': False, 'dest': 'push_to_hub', 'default': True, 'help': ' ', 'type': <class 'bool'>}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'repo_id': {'required': False, 'dest': 'repo_id', 'default': None, 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'private': {'required': False, 'dest': 'private', 'default': None, 'help': 'Upload on private repository on the Hugging Face hub.', 'type': typing.Optional[bool]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'tags': {'required': False, 'dest': 'tags', 'default': None, 'help': 'Add tags to your policy on the hub.', 'type': typing.Optional[typing.List[str]]}
+DEBUG 2025-12-24 17:53:35 _wrapper.py:309 Arg options for field 'license': {'required': False, 'dest': 'license', 'default': None, 'help': 'Add tags to your policy on the hub.', 'type': typing.Optional[str]}
+DEBUG 2025-12-24 17:53:35 gparsing.py:143 
+POST PROCESSING
+
+DEBUG 2025-12-24 17:53:35 gparsing.py:144 (raw) parsed args: Namespace()
