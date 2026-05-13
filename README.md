@@ -9,7 +9,7 @@
   &nbsp;
   <a href="https://arxiv.org/abs/2605.11817"><img src="https://img.shields.io/badge/ArXiv%20Paper-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="ArXiv paper" /></a>
   &nbsp;
-  <a href="https://fediory.github.io/Grid-Sampler"><img src="https://img.shields.io/badge/Code-24292f?style=for-the-badge&logo=github&logoColor=white" alt="Website" /></a>
+  <a href="https://fediory.github.io/Grid-Sampler"><img src="https://img.shields.io/badge/Website-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Project website" /></a>
   &nbsp;
   <a href="https://huggingface.co/collections/Fediory/grid-sampler"><img src="https://img.shields.io/badge/Models-FF9D00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face models" /></a>
 </p>
