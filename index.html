@@ -122,6 +122,21 @@
     }
     details.summary-box summary { cursor: pointer; font-weight: 600; color: #334155; }
 
+    .results-extra-panel {
+      max-width: 800px;
+      margin: 0 auto 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.65);
+      padding: 1.25rem 1.5rem 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    .results-extra-panel .results-extra-title {
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 1rem !important;
+    }
+
     .footer-site {
       background: rgba(241, 245, 249, 0.65);
       backdrop-filter: blur(10px);
@@ -305,10 +320,18 @@
 
     [data-aos] { pointer-events: auto; }
 
-    /* Compact logo above title — fixed max size so layout stays stable */
+    /* Compact logos above title — fixed max size so layout stays stable */
+    .page-logos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      margin-bottom: 0.35rem;
+    }
     .page-logo {
       display: block;
-      margin: 0 auto 0.35rem;
+      margin: 0;
       height: auto;
       max-height: 56px;
       max-width: min(140px, 30vw);
@@ -325,7 +348,10 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <img src="assets/logo.png" alt="Grid Sampler" class="page-logo" width="140" decoding="async">
+          <div class="page-logos">
+            <img src="assets/logo.png" alt="Grid Sampler" class="page-logo" width="140" decoding="async">
+            <img src="assets/logo2.png" alt="Affiliation logo" class="page-logo" width="140" decoding="async">
+          </div>
           <h1 class="title is-2 publication-title">Grid Sampler</h1>
           <p class="subtitle-paper"><strong>See What Matters:</strong> Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model</p>
 
@@ -356,15 +382,15 @@
           <div class="has-text-centered">
             <div class="publication-links">
               <span class="link-block">
-                <a href="#" class="button is-dark is-rounded" title="PDF (to appear)">
-                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper</span>
+                <a href="#core-idea" class="button is-dark is-rounded" title="Core idea">
+                  <span class="icon"><i class="fas fa-lightbulb"></i></span>
+                  <span>Core idea</span>
                 </a>
               </span>
               <span class="link-block">
-                <a href="#" class="button is-dark is-rounded" title="arXiv (to appear)">
+                <a href="https://arxiv.org/abs/2605.11817" class="button is-dark is-rounded" title="arXiv">
                   <span class="icon"><i class="fas fa-archive"></i></span>
-                  <span>arXiv</span>
+                  <span>ArXiv Paper</span>
                 </a>
               </span>
               <span class="link-block">
@@ -455,6 +481,13 @@
             Comparison of Model Efficiency and Performance on LIBERO dataset (Liu et al., 2023). We report efficiency metrics (visual tokens, FLOPs, completion time) and success rate across different task categories. We follow VLASH (Tang et al., 2025) to calculate the average duration and steps of task completion. All efficiency calculations are evaluated on a single RTX Pro6000 GPU and in 32 language tokens. The symbol <sup>†</sup> represents the training-free pruning methods, which forced to operate post-training at test time, leading to inherent performance degradation. (We note that VLA-Cache is not strictly a pruning method, but a token-cached speeding-up method. However, since many pruning methods are also compared with it, we also provide the result here.)
           </p>
         </details>
+        <div class="results-extra-panel" data-aos="fade-up" data-aos-duration="600">
+          <h3 class="title is-5 has-text-centered results-extra-title">One Token Pruning</sub></h3>
+          <img src="assets/main_result3.png" alt="GridS performance at K equals 1 with pi0.5 backbone" class="result-img" style="margin-top: 0;">
+          <p class="is-size-7 has-text-grey-dark mt-3 mb-0" style="text-align: justify; line-height: 1.55;">
+            Performance of GridS under the extreme sparsity constraint (<em>K</em> = 1) using the π<sub>0.5</sub> backbone. Counter-intuitively, a single sampled token (a 99.6% reduction in visual input) retains sufficient information to achieve nearly identical performance compared to the dense 256-token baseline.
+          </p>
+        </div>
         <details class="box summary-box">
           <summary>Real-world</summary>
           <img src="assets/main_result2.png" alt="Real-world results" class="result-img">
@@ -470,7 +503,7 @@
   </div>
 </section>
 
-<section class="section section-soft" data-aos="fade-up" data-aos-duration="700">
+<section id="core-idea" class="section section-soft" data-aos="fade-up" data-aos-duration="700">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-four-fifths">

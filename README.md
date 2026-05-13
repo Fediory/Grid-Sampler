@@ -4,6 +4,16 @@
 
 # Grid Sampler [ICML 2026]
 
+<p align="center">
+  <a href="https://github.com/Fediory/Grid-Sampler/tree/main/core_idea"><img src="https://img.shields.io/badge/Core%20idea-363636?style=for-the-badge" alt="Core idea" /></a>
+  &nbsp;
+  <a href="https://arxiv.org/abs/2605.11817"><img src="https://img.shields.io/badge/ArXiv%20Paper-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="ArXiv paper" /></a>
+  &nbsp;
+  <a href="https://fediory.github.io/Grid-Sampler"><img src="https://img.shields.io/badge/Code-24292f?style=for-the-badge&logo=github&logoColor=white" alt="Website" /></a>
+  &nbsp;
+  <a href="https://huggingface.co/collections/Fediory/grid-sampler"><img src="https://img.shields.io/badge/Models-FF9D00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face models" /></a>
+</p>
+
 [简体中文](README-ZH.md)
 
 #### See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model
@@ -49,8 +59,8 @@
 
 ## To-Do List ✅
 - ✅ Release openpi code with Grid Sampler.
+- ✅ Release Lerobot code with Grid Sampler on real-world dataset.
 - ⬜ Release X-VLA code with Grid Sampler on Robotwin.
-- ⬜ Release Lerobot code with Grid Sampler on real-world dataset.
 
 
 ## Results 📊
@@ -68,6 +78,8 @@
 ![Result 2](assets/main_result2.png)
 
 </details>
+
+<a id="core-idea"></a>
 
 ## 1. Core idea 🌑
 
@@ -90,6 +102,19 @@ All runnable checks for this stack live in **openpi**. After environment setup i
 - **LIBERO simulation rollout / eval:** [`openpi/examples/libero/README.md`](openpi/examples/libero/README.md) (see also the LIBERO pointer in the fine-tuned checkpoint table on the main README).
 - **ALOHA:** simulator workflow in [`openpi/examples/aloha_sim/README.md`](openpi/examples/aloha_sim/README.md); real-robot setup in [`openpi/examples/aloha_real/README.md`](openpi/examples/aloha_real/README.md) (also summarized under **More Examples** in [`openpi/README.md`](openpi/README.md)).
 
+### LeRobot (PyTorch)
+
+This repo vendors a **LeRobot** fork under [`lerobot/`](lerobot/). Install and CLI usage follow upstream **[`lerobot/README.md`](lerobot/README.md)** (e.g. `pip install -e ".[...]"` from that directory, then `lerobot-train` / `lerobot-eval` as documented there).
+
+**What Grid Sampler changes inside this LeRobot tree**
+
+| Area | Change |
+|------|--------|
+| **New module** | [`lerobot/src/lerobot/policies/active_token_sampler.py`](lerobot/src/lerobot/policies/active_token_sampler.py) — PyTorch **ActiveTokenSampler**: global-pooled visual context predicts `K` normalized 2D locations, **`F.grid_sample`** bilinearly reads features, optional **coordinate MLP** adds geometry to sampled tokens (non-square feature maps are squared with adaptive pooling first). |
+| **SmolVLA** | [`configuration_smolvla.py`](lerobot/src/lerobot/policies/smolvla/configuration_smolvla.py), [`modeling_smolvla.py`](lerobot/src/lerobot/policies/smolvla/modeling_smolvla.py) — flags **`use_grid_token_sampler`** (default `True`) and **`grid_token_sampler_num_tokens`** (default `16`). When on, SigLIP patch tokens are reshaped to a feature map, pruned by `ActiveTokenSampler`, then fed to the VLM as **K tokens** instead of the full patch grid. `forward` / `predict_action_chunk` / `select_action` accept optional **`use_grid_token_sampler`** to override per call (see module docstring at top of `modeling_smolvla.py`). |
+| **ACT / Diffusion / VQ-BeT / TDMPC** | Each policy’s **configuration** adds **`use_vision_grid_token_prune`** and **`vision_grid_token_prune_num_tokens`**; the matching **modeling** file wires **`ActiveTokenSampler`** after the CNN / ResNet vision tower (before the usual flatten + transformer or spatial-softmax path), with learnable pos-embeddings sized to `K` when pruning is enabled. |
+| **π0 / π0-FAST / SAC / reward classifier** | These files **import** `ActiveTokenSampler` for consistency with the tree, but **do not call it in the forward pass** in this fork — the full **JAX π0 + Grid** path stays in **openpi** (configs with `grid=True`). |
+
 ## 3. Finetuning 🌓
 
 ### openpi
@@ -103,7 +128,17 @@ Fine-tuning follows the **openpi** workflow; the authoritative walkthrough is **
 
 Serving a fine-tuned checkpoint is covered under **Spinning up a policy server and running inference** in that chapter, and in [`openpi/scripts/serve_policy.py`](openpi/scripts/serve_policy.py) / [`openpi/examples/libero/README.md`](openpi/examples/libero/README.md) for LIBERO.
 
+### LeRobot
 
+Use the vendored [`lerobot/`](lerobot/) tree: install extras as in **[`lerobot/README.md`](lerobot/README.md)**, then train with the usual LeRobot CLI, for example:
+
+```bash
+cd lerobot
+pip install -e ".[smolvla]"   # or another policy extra you need
+lerobot-train --policy.type=smolvla --dataset.repo_id=...
+```
+
+Enable or tune Grid-style pruning via policy kwargs, e.g. **`--policy.use_grid_token_sampler=true|false`** and **`--policy.grid_token_sampler_num_tokens=N`** for **SmolVLA**; for **ACT / Diffusion / VQ-BeT / TDMPC**, use **`--policy.use_vision_grid_token_prune=true`** and **`--policy.vision_grid_token_prune_num_tokens=N`** (must match how the checkpoint was trained when loading weights). See the **“What Grid Sampler changes”** table under **LeRobot (PyTorch)** in **§2 Testing** above for file-level detail.
 
 ## 4. Contacts 🌔
 If you have any questions, please contact us or submit an issue to the repository! We sincerely welcome your feedback and contributions.

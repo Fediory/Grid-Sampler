@@ -6,6 +6,15 @@
 
 # Grid Sampler [ICML 2026]
 
+<p align="center">
+  <a href="https://github.com/Fediory/Grid-Sampler/tree/main/core_idea"><img src="https://img.shields.io/badge/Core%20idea-363636?style=for-the-badge" alt="Core idea" /></a>
+  &nbsp;
+  <a href="https://arxiv.org/abs/2605.11817"><img src="https://img.shields.io/badge/ArXiv%20Paper-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="ArXiv paper" /></a>
+  &nbsp;
+  <a href="https://fediory.github.io/Grid-Sampler"><img src="https://img.shields.io/badge/Code-24292f?style=for-the-badge&logo=github&logoColor=white" alt="Website" /></a>
+  &nbsp;
+  <a href="https://huggingface.co/collections/Fediory/grid-sampler"><img src="https://img.shields.io/badge/Models-FF9D00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face models" /></a>
+</p>
 
 <p align="center">
   <a href="https://scholar.google.com/citations?user=WljJ2HUAAAAJ">Yixu Feng</a><sup>1</sup>，
@@ -45,8 +54,8 @@
 ## 路线图 To-Do List ✅
 
 - ✅ 发布集成 Grid Sampler 的 openpi 代码。
+- ✅ 发布集成 Grid Sampler 的 LeRobot 真实训练集代码。
 - ⬜ 发布集成 Grid Sampler 的 X-VLA（Robotwin）代码。
-- ⬜ 发布集成 Grid Sampler 的 LeRobot 真实训练集代码。
 
 ## 结果 Results 📊
 
@@ -63,6 +72,8 @@
 ![Result 2](assets/main_result2.png)
 
 </details>
+
+<a id="core-idea"></a>
 
 ## 1. 核心思想 Core idea 🌑
 
@@ -85,6 +96,19 @@
 - **LIBERO 仿真评测：** [`openpi/examples/libero/README.md`](openpi/examples/libero/README.md)（主 README 微调模型表中亦有 LIBERO 相关说明）。
 - **ALOHA：** 仿真见 [`openpi/examples/aloha_sim/README.md`](openpi/examples/aloha_sim/README.md)；真机见 [`openpi/examples/aloha_real/README.md`](openpi/examples/aloha_real/README.md)；汇总亦见 [`openpi/README.md`](openpi/README.md) 的 **More Examples**。
 
+### LeRobot（PyTorch）
+
+本仓库在 **[`lerobot/`](lerobot/)** 目录下附带 **LeRobot** 修改版。安装方式与命令行工具与上游一致，请以 **[`lerobot/README.md`](lerobot/README.md)** 为准（例如在该目录下 `pip install -e ".[...]"`，再按文档使用 `lerobot-train` / `lerobot-eval` 等）。
+
+**Grid Sampler 在本 LeRobot 树中改动了什么**
+
+| 位置 | 说明 |
+|------|------|
+| **新增模块** | [`lerobot/src/lerobot/policies/active_token_sampler.py`](lerobot/src/lerobot/policies/active_token_sampler.py) — PyTorch **ActiveTokenSampler**：对视觉特征做全局池化后经 MLP 预测 `K` 个归一化二维坐标，用 **`F.grid_sample`** 双线性采样特征，可选 **坐标 MLP** 将几何信息加到采样 token 上（特征图非方阵时会先用 adaptive pooling 压成方阵）。 |
+| **SmolVLA** | [`configuration_smolvla.py`](lerobot/src/lerobot/policies/smolvla/configuration_smolvla.py)、[`modeling_smolvla.py`](lerobot/src/lerobot/policies/smolvla/modeling_smolvla.py) — 配置项 **`use_grid_token_sampler`**（默认 `True`）、**`grid_token_sampler_num_tokens`**（默认 `16`）。开启时，将 SigLIP patch 序列还原为空间特征图，经 `ActiveTokenSampler` 压缩后，再以 **K 个 token** 送入 VLM，而不是完整 patch 网格。`forward` / `predict_action_chunk` / `select_action` 支持每次调用时用 **`use_grid_token_sampler`** 覆盖默认行为（详见 `modeling_smolvla.py` 顶部说明）。 |
+| **ACT / Diffusion / VQ-BeT / TDMPC** | 各策略 **configuration** 增加 **`use_vision_grid_token_prune`**、**`vision_grid_token_prune_num_tokens`**；对应 **modeling** 在 CNN / ResNet 视觉塔之后接入 **`ActiveTokenSampler`**，再接原有的展平 + Transformer 或 spatial softmax 等路径；开启剪枝时使用长度为 `K` 的可学习位置编码。 |
+| **π0 / π0-FAST / SAC / reward classifier** | 这些文件仅 **import** `ActiveTokenSampler`（`# noqa: F401`），**前向中未实际调用**；带 Grid 的完整 **π0** 训练与推理仍以 **openpi（JAX）** 为主（`config.py` 中带 `grid=True` 的配置）。 |
+
 ## 3. 微调 Finetuning 🌓
 
 ### openpi
@@ -97,6 +121,18 @@
 4. **PyTorch 路线：** 若使用 PyTorch 实现，见同 README 的 **[PyTorch Support](openpi/README.md#pytorch-support)**（环境、`train_pytorch.py`、JAX→PyTorch 权重转换等）。
 
 部署微调后的 checkpoint：见上述章节中的 **Spinning up a policy server and running inference**，以及 [`openpi/scripts/serve_policy.py`](openpi/scripts/serve_policy.py) 与 LIBERO 客户端文档 [`openpi/examples/libero/README.md`](openpi/examples/libero/README.md)。
+
+### LeRobot
+
+使用本仓库自带的 **[`lerobot/`](lerobot/)**：按 **[`lerobot/README.md`](lerobot/README.md)** 安装对应 extras 后，可用 LeRobot 常规 CLI 训练，例如：
+
+```bash
+cd lerobot
+pip install -e ".[smolvla]"   # 按需换成其它策略的 extra
+lerobot-train --policy.type=smolvla --dataset.repo_id=...
+```
+
+通过策略参数开关或调节 Grid 式剪枝：**SmolVLA** 使用 **`--policy.use_grid_token_sampler=true|false`** 与 **`--policy.grid_token_sampler_num_tokens=N`**；**ACT / Diffusion / VQ-BeT / TDMPC** 使用 **`--policy.use_vision_grid_token_prune=true`** 与 **`--policy.vision_grid_token_prune_num_tokens=N`**（加载权重时需与训练时一致）。各文件级改动见上文 **§2 测试** 中 **LeRobot（PyTorch）** 小节的表格。
 
 ## 4. 联系方式 Contacts 🌔
 
