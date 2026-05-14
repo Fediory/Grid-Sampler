@@ -14,7 +14,7 @@
   <a href="https://huggingface.co/collections/Fediory/grid-sampler"><img src="https://img.shields.io/badge/Models-FF9D00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face models" /></a>
 </p>
 
-[简体中文](README-ZH.md)
+[简体中文](README-ZH.md) | [知乎](https://zhuanlan.zhihu.com/p/2038021530454586577)
 
 #### See What Matters: Differentiable Grid Sample Pruning for Generalizable Vision-Language-Action Model
 
