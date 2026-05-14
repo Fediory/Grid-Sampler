@@ -70,7 +70,6 @@ def eval_libero(args: Args) -> None:
     else:
         raise ValueError(f"Unknown task suite: {args.task_suite_name}")
     
-    max_steps = 1500  # set a large max step for all suites
     client = _websocket_client_policy.WebsocketClientPolicy(args.host, args.port)
 
     # Start evaluation
